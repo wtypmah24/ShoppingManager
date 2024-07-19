@@ -17,7 +17,7 @@ ShoppingManager is a Spring Boot application for managing customers and their sh
 - **Exception handling**: Controller advice
 - **Build System**: Maven 3.9.5
 - **Version control**: Git/GitHub
-- **Logging**: SLF4J, Log4j2, Lombok
+- **Logging**: SLF4J, Lombok
 
 ## Database scheme
 <img src="images/DB_scheme.png" width="300">
