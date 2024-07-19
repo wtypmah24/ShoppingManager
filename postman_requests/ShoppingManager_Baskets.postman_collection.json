@@ -1,0 +1,70 @@
+{
+	"info": {
+		"_postman_id": "b0a7a30d-c7ba-4d43-a428-71c66d31bab8",
+		"name": "ShoppingManager_Baskets",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32654663"
+	},
+	"item": [
+		{
+			"name": "1. Get all customer's baskets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/baskets/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"baskets",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Add basket to a customer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/baskets/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"baskets",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Remove Basket",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/baskets/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"baskets",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -6,8 +6,10 @@ import com.example.shoppingmanager.entity.Product;
 import com.example.shoppingmanager.exception.ProductException;
 import com.example.shoppingmanager.mapper.ProductMapper;
 import com.example.shoppingmanager.repository.ProductRepository;
+import com.example.shoppingmanager.utils.LogMessages;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductMapper mapper;
@@ -38,7 +41,10 @@ public class ProductService {
     public ProductResponseDto getProductById(long id) throws ProductException {
         return mapper.productToProductResponseDto(repository
                 .findById(id)
-                .orElseThrow(() -> new ProductException("There is no product with id " + id)));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.PRODUCT_NOT_FOUND_ID, id);
+                    return new ProductException(LogMessages.PRODUCT_NOT_FOUND_ID + id);
+                }));
     }
 
     public ProductResponseDto getProductByProductName(String productName) throws ProductException {
@@ -46,8 +52,11 @@ public class ProductService {
                 .productToProductResponseDto(
                         repository
                                 .findByProductName(productName)
-                                .orElseThrow(() -> new ProductException
-                                        ("There is no product with productName " + productName)));
+                                .orElseThrow(() -> {
+                                    log.error(LogMessages.PRODUCT_NOT_FOUND_NAME, productName);
+                                    return new ProductException
+                                            (LogMessages.PRODUCT_NOT_FOUND_NAME + productName);
+                                }));
     }
 
     public List<ProductResponseDto> getAllProducts() {
@@ -59,7 +68,7 @@ public class ProductService {
     @Transactional
     public ProductResponseDto updateProduct(long id, Map<String, Object> params) throws ProductException {
         Product product = repository.findById(id)
-                .orElseThrow(() -> new ProductException("There is no product with id " + id));
+                .orElseThrow(() -> new ProductException(LogMessages.PRODUCT_NOT_FOUND_ID + id));
 
         params.forEach((key, value) -> {
             switch (key) {
@@ -70,6 +79,7 @@ public class ProductService {
                     } else if (value instanceof BigDecimal) {
                         product.setPrice((BigDecimal) value);
                     } else {
+                        log.error("Invalid type for price");
                         throw new IllegalArgumentException("Invalid type for price");
                     }
                 }
@@ -82,9 +92,13 @@ public class ProductService {
     }
 
     private void checkProductCandidates(ProductRequestDto productRequestDto) throws ProductException {
-        if (productRequestDto == null) throw new ProductException("You didn't provide a product request!");
+        if (productRequestDto == null) {
+            log.error("Wrong product request received");
+            throw new ProductException("You didn't provide a product request!");
+        }
 
         if (productRequestDto.productName().isEmpty() || productRequestDto.price() == null) {
+            log.error("Wrong product request received");
             throw new ProductException("You didn't provide a product name or price!");
         }
     }

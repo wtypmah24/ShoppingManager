@@ -1,0 +1,127 @@
+{
+	"info": {
+		"_postman_id": "5c6221c1-1d90-4524-9f55-8f9578576662",
+		"name": "ShoppingManager_Shopping",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32654663"
+	},
+	"item": [
+		{
+			"name": "1. Add item to a new basket",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"1\": 2,\n    \"2\": 13, \n    \"3\": 102\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/shopping/add_to_basket/2?basketName=\"weekend\"",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shopping",
+						"add_to_basket",
+						"2"
+					],
+					"query": [
+						{
+							"key": "basketName",
+							"value": "\"weekend\""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Add item to the specific basket",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"1\": 2,\n    \"2\": 13, \n    \"3\": 10210000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/shopping/add_to_existing_basket/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shopping",
+						"add_to_existing_basket",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Remove item from basket",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"1\": 2,\n    \"2\": 13, \n    \"3\": 10210000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/shopping/remove_from_basket/3/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shopping",
+						"remove_from_basket",
+						"3",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all baskets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/baskets/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"baskets",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

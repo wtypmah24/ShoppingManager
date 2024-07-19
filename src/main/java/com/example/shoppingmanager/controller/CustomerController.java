@@ -38,7 +38,8 @@ public class CustomerController {
     }
 
     @PostMapping("/add")
-    public CustomerResponseDto addCustomer(@RequestBody CustomerRequestDto customerCandidate) throws CustomerException {
+    public CustomerResponseDto addCustomer(@RequestBody CustomerRequestDto customerCandidate)
+            throws CustomerException {
 
         return service.addCustomer(customerCandidate);
     }

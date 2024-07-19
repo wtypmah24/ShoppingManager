@@ -13,8 +13,10 @@ import com.example.shoppingmanager.repository.BasketItemRepository;
 import com.example.shoppingmanager.repository.BasketRepository;
 import com.example.shoppingmanager.repository.CustomerRepository;
 import com.example.shoppingmanager.repository.ProductRepository;
+import com.example.shoppingmanager.utils.LogMessages;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ShoppingService {
 
     private final BasketRepository basketRepository;
@@ -40,7 +43,10 @@ public class ShoppingService {
 
         Basket basket = basketRepository
                 .findById(basketId)
-                .orElseThrow(() -> new BasketException("There is no basket with id: " + basketId));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.BASKET_NOT_FOUND_ID, basketId);
+                    return new BasketException(LogMessages.BASKET_NOT_FOUND_ID + basketId);
+                });
 
         Set<BasketItem> items = createBasketItems(basket, itemsToQuantity);
 
@@ -59,7 +65,10 @@ public class ShoppingService {
 
         Customer customer = customerRepository
                 .findById(customerId)
-                .orElseThrow(() -> new CustomerException("There is no customer with id: " + customerId));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.CUSTOMER_NOT_FOUND_ID, customerId);
+                    return new CustomerException(LogMessages.CUSTOMER_NOT_FOUND_ID + customerId);
+                });
 
         Basket basket = new Basket();
         basket.setName(basketName);
@@ -79,16 +88,25 @@ public class ShoppingService {
     public BasketItemResponseDto removeItemFromBasket(long basketId, long productId)
             throws BasketException, ProductException {
         Basket basket = basketRepository.findById(basketId)
-                .orElseThrow(() -> new BasketException("There is no basket with id: " + basketId));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.BASKET_NOT_FOUND_ID, basketId);
+                    return new BasketException(LogMessages.BASKET_NOT_FOUND_ID + basketId);
+                });
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductException("There is no product with id " + productId));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.PRODUCT_NOT_FOUND_ID, productId);
+                    return new ProductException(LogMessages.PRODUCT_NOT_FOUND_ID + productId);
+                });
 
         BasketItem itemToRemove = basket.getProducts()
                 .stream()
                 .filter(item -> item.getProduct().equals(product))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Product not found in basket"));
+                .orElseThrow(() -> {
+                    log.error("No basket item found for product with id: {} in basket with id: {}", productId, basketId);
+                    return new IllegalArgumentException("Product not found in basket");
+                });
 
         basket.getProducts().remove(itemToRemove);
 
@@ -105,7 +123,10 @@ public class ShoppingService {
 
             Product product = productRepository
                     .findById(productCode)
-                    .orElseThrow(() -> new ProductException("There is no product with id " + productCode));
+                    .orElseThrow(() -> {
+                        log.error(LogMessages.PRODUCT_NOT_FOUND_ID, productCode);
+                        return new ProductException(LogMessages.PRODUCT_NOT_FOUND_ID + productCode);
+                    });
 
             BasketItem basketItem = new BasketItem();
             basketItem.setProduct(product);

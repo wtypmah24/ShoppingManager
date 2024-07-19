@@ -8,8 +8,10 @@ import com.example.shoppingmanager.exception.CustomerException;
 import com.example.shoppingmanager.mapper.BasketMapper;
 import com.example.shoppingmanager.repository.BasketRepository;
 import com.example.shoppingmanager.repository.CustomerRepository;
+import com.example.shoppingmanager.utils.LogMessages;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BasketService {
 
     private final CustomerRepository customerRepository;
@@ -28,7 +31,10 @@ public class BasketService {
 
         Customer customer = customerRepository
                 .findById(customerId)
-                .orElseThrow(() -> new CustomerException("There is no customer with id: " + customerId));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.CUSTOMER_NOT_FOUND_ID, customerId);
+                    return new CustomerException(LogMessages.CUSTOMER_NOT_FOUND_ID + customerId);
+                });
 
         Basket basket = new Basket();
         basket.setName(basketName);
@@ -45,11 +51,17 @@ public class BasketService {
 
         Customer customer = customerRepository
                 .findById(customerId)
-                .orElseThrow(() -> new CustomerException("There is no customer with id: " + customerId));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.CUSTOMER_NOT_FOUND_ID, customerId);
+                    return new CustomerException(LogMessages.CUSTOMER_NOT_FOUND_ID + customerId);
+                });
 
         Basket basket = basketRepository
                 .findById(basketId)
-                .orElseThrow(() -> new BasketException("There is no basket with id: " + basketId));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.BASKET_NOT_FOUND_ID, basketId);
+                    return new BasketException(LogMessages.BASKET_NOT_FOUND_ID + basketId);
+                });
         customer.removeBasket(basket);
     }
 
@@ -58,7 +70,10 @@ public class BasketService {
 
         Customer customer = customerRepository
                 .findById(customerId)
-                .orElseThrow(() -> new CustomerException("There is no customer with id: " + customerId));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.CUSTOMER_NOT_FOUND_ID, customerId);
+                    return new CustomerException(LogMessages.CUSTOMER_NOT_FOUND_ID + customerId);
+                });
 
         return customer.getBaskets()
                 .stream()

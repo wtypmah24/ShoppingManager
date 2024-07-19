@@ -6,8 +6,10 @@ import com.example.shoppingmanager.entity.Customer;
 import com.example.shoppingmanager.exception.CustomerException;
 import com.example.shoppingmanager.mapper.CustomerMapper;
 import com.example.shoppingmanager.repository.CustomerRepository;
+import com.example.shoppingmanager.utils.LogMessages;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerService {
 
     private final CustomerMapper mapper;
@@ -39,7 +42,10 @@ public class CustomerService {
         return repository
                 .findById(id)
                 .map(mapper::customerToCustomerResponseDto)
-                .orElseThrow(() -> new CustomerException("There is no customer with id: " + id));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.CUSTOMER_NOT_FOUND_ID, id);
+                    return new CustomerException(LogMessages.CUSTOMER_NOT_FOUND_ID + id);
+                });
     }
 
     public CustomerResponseDto getCustomerByEmail(String email) throws CustomerException {
@@ -47,7 +53,10 @@ public class CustomerService {
         return repository
                 .findByEmail(email)
                 .map(mapper::customerToCustomerResponseDto)
-                .orElseThrow(() -> new CustomerException("There is no customer with email: " + email));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.CUSTOMER_NOT_FOUND_EMAIL, email);
+                    return new CustomerException(LogMessages.CUSTOMER_NOT_FOUND_EMAIL + email);
+                });
     }
 
     public List<CustomerResponseDto> getAllCustomers() {
@@ -65,7 +74,10 @@ public class CustomerService {
 
         Customer customer = repository
                 .findByEmail(email)
-                .orElseThrow(() -> new CustomerException("There is no customer with email " + email));
+                .orElseThrow(() -> {
+                    log.error(LogMessages.CUSTOMER_NOT_FOUND_EMAIL, email);
+                    return new CustomerException(LogMessages.CUSTOMER_NOT_FOUND_EMAIL + email);
+                });
 
         parameters.forEach((key, value) -> {
             switch (key) {
@@ -82,13 +94,19 @@ public class CustomerService {
 
     private void checkCustomerCandidates(CustomerRequestDto customerRequestDto) throws CustomerException {
 
-        if (customerRequestDto == null) throw new CustomerException("You didn't provide a customer request!");
+        if (customerRequestDto == null) {
+            log.error(LogMessages.WRONG_CUSTOMER_CANDIDATE);
+            throw new CustomerException(LogMessages.WRONG_CUSTOMER_CANDIDATE);
+        }
 
         if (
                 customerRequestDto.firstName().isBlank() ||
-                customerRequestDto.addresses().isEmpty() ||
-                customerRequestDto.lastName().isBlank() ||
-                customerRequestDto.email().isBlank()
-        ) throw new CustomerException("You didn't provide a full customer information!");
+                        customerRequestDto.addresses().isEmpty() ||
+                        customerRequestDto.lastName().isBlank() ||
+                        customerRequestDto.email().isBlank()
+        ) {
+            log.error(LogMessages.WRONG_CUSTOMER_DATA);
+            throw new CustomerException(LogMessages.WRONG_CUSTOMER_DATA);
+        }
     }
 }
