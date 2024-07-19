@@ -22,6 +22,6 @@ ShoppingManager is a Spring Boot application for managing customers and their sh
 ## Database scheme
 <img src="images/DB_scheme.png" width="300">
 
-## [Postman http requests examples]()
+## [Postman http requests examples](https://github.com/wtypmah24/ShoppingManager/tree/main/postman_requests)
 
 </div>
