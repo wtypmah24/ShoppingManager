@@ -2,7 +2,6 @@ package com.example.shoppingmanager.service;
 
 import com.example.shoppingmanager.dto.request.CustomerRequestDto;
 import com.example.shoppingmanager.dto.response.CustomerResponseDto;
-import com.example.shoppingmanager.entity.Address;
 import com.example.shoppingmanager.entity.Customer;
 import com.example.shoppingmanager.exception.CustomerException;
 import com.example.shoppingmanager.mapper.CustomerMapper;
