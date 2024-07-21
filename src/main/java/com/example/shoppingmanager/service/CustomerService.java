@@ -101,7 +101,6 @@ public class CustomerService {
 
         if (
                 customerRequestDto.firstName().isBlank() ||
-                        customerRequestDto.addresses().isEmpty() ||
                         customerRequestDto.lastName().isBlank() ||
                         customerRequestDto.email().isBlank()
         ) {
