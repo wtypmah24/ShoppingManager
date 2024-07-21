@@ -8,5 +8,5 @@ public record CustomerResponseDto(long id,
                                   String firstName,
                                   String lastName,
                                   String email,
-                                  Set<AddressRequestDto> addresses) {
+                                  Set<AddressResponseDto> addresses) {
 }
