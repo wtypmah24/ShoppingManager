@@ -27,6 +27,12 @@ class ProductRepositoryTest {
     }
 
     @Test
+    void save() {
+        Product savedProduct = productRepository.save(product);
+        assertEquals(product, savedProduct);
+
+    }
+    @Test
     void deleteById() {
         productRepository.save(product);
         productRepository.deleteById(1L);
