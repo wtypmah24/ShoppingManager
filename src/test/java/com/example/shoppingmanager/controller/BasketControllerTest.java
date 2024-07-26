@@ -3,11 +3,7 @@ package com.example.shoppingmanager.controller;
 import com.example.shoppingmanager.dto.response.BasketItemResponseDto;
 import com.example.shoppingmanager.dto.response.BasketResponseDto;
 import com.example.shoppingmanager.dto.response.ProductResponseDto;
-import com.example.shoppingmanager.mapper.BasketMapper;
-import com.example.shoppingmanager.repository.BasketRepository;
-import com.example.shoppingmanager.repository.CustomerRepository;
 import com.example.shoppingmanager.service.BasketService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,25 +18,19 @@ import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BasketController.class)
 public class BasketControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper mapper;
     @MockBean
     private BasketService basketService;
-    @MockBean
-    private BasketRepository basketRepository;
-    @MockBean
-    private BasketMapper basketMapper;
-    @MockBean
-    private CustomerRepository customerRepository;
     private Set<BasketResponseDto> baskets;
+
     @BeforeEach
     void setUp() {
         ProductResponseDto product = new ProductResponseDto(
@@ -65,6 +55,30 @@ public class BasketControllerTest {
         when(basketService.addBasket(anyLong(), anyString())).thenReturn(baskets);
         mockMvc.perform(post("/baskets/add/{customerId}", customerId)
                         .param("basketName", basketName)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(result -> result.getResponse().equals(baskets));
+    }
+
+    @Test
+    void removeBasket() throws Exception {
+        long customerId = 1L;
+        long basketId = 1L;
+
+        doNothing().when(basketService).removeBasket(anyLong(), anyLong());
+
+        mockMvc.perform(delete("/baskets/remove/{customerId}/{basketId}", customerId, basketId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getBasketsByCustomerId() throws Exception {
+        long customerId = 1L;
+
+        when(basketService.getBasketsByCustomerId(anyLong())).thenReturn(baskets);
+
+        mockMvc.perform(get("/baskets/{customerId}", customerId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(result -> result.getResponse().equals(baskets));
